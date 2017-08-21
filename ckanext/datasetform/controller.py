@@ -25,9 +25,9 @@ class ContactController(BaseController):
 
         context = {'model': model, 'user': c.user}
 
-        data_dict = {'id': dataset_id}
+        data_dict = {'id': dataset_id, 'include_tracking': True}
 
-        # check_access('package_show', context, data_dict)
+        check_access('package_show', context, data_dict)
 
         try:
             c.pkg_dict = get_action('package_show')(context, {'id': dataset_id, 'include_tracking': True})
@@ -71,7 +71,7 @@ class ContactController(BaseController):
                     vars = {'data': data_dict, 'errors': errors}
                     return render('package/read.html', extra_vars=vars)
 
-                # Attemp
+                # Attempt to send mail.
                 body = 'Name: %s\nEmail: %s' % (data_dict['name'], data_dict['email'])
                 body += '\n\nDataset: %s' % (data_dict['url'])
                 body += '\nDataset ID: %s' % (c.pkg.id)
