@@ -1,4 +1,4 @@
-{% import 'macros/form.html' as form %}
+{% import 'macros/contact_form.html' as form %}
 
 <section id="dataset-contact" class="dataset-contact">
     <h3>{{ _('Contact Maintainer') }}</h3>
@@ -11,7 +11,7 @@
             {% endif %}
             {{ form.input('name', label=_('Your Name'), id='field-name', value=name, error=errors.name, classes=['control-medium'], is_required=true) }}
 
-            {% set email = data.email if data else userobj.email %}
+            {% set email = data.email|lower if data else userobj.email|lower %}
             {{ form.input('email', label=_('Your Email'), id='field-email', value=email, error=errors.email, classes=['control-medium'], is_required=true) }}
 
             {{ form.input('subject', label=_('Subject'), id='field-subject', value=data.subject, error=errors.subject, classes=['control-medium'], is_required=true) }}
@@ -19,8 +19,7 @@
             {{ form.textarea('message', label=_('Your Message'), id='field-message', value=data.message, error=errors.message, classes=['control-full'], is_required=true) }}
         </div>
         <div class="form-actions">
-            {{ form.required_message() }}
-            <input type="submit" class="btn-primary" value="{{ _('Send') }}"/>
+            <input type="submit" class="btn-primary" value="{{ _('Submit') }}"/>
             <input type="reset" class="btn-secondary" value="{{ _('Clear') }}"/>
         </div>
     </form>
