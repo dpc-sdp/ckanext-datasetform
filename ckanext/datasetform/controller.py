@@ -66,6 +66,9 @@ class ContactController(BaseController):
                 if data_dict['message'] == '':
                     errors['message'] = [u'Missing value for your Message.']
 
+                if 'terms' not in data_dict:
+                    errors['terms'] = [u'Please accept the privacy statement.']
+
                 if (len(errors)) != 0:
                     h.flash_error(u'Please correct all errors in the contact form.')
                     vars = {'data': data_dict, 'errors': errors}
