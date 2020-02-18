@@ -80,7 +80,7 @@ Example:
 #}
 {% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false) %}
   <div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
-    <label class="control-label" for="{{ for }}">{{ label or _('Custom') }} {% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">(Required field)</span>{% endif %}</label>
+    <label class="control-label" for="{{ for }}">{{ label or _('Custom') }} {% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">(Required)</span>{% endif %}</label>
     <div class="controls{{ " " ~ control_classes | join(' ') }}">
       {{ caller() }}
       {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
@@ -173,3 +173,36 @@ Example
   </p>
 {% endmacro %}
 
+
+{#
+Builds a single checkbox input.
+
+name        - The name of the form parameter.
+id          - The id to use on the input and label. Convention is to prefix with 'field-'.
+label       - The human readable label.
+value       - The value of the input.
+checked     - If true the checkbox will be checked
+error       - An error string for the field or just true to highlight the field.
+classes     - An array of classes to apply to the control-group.
+is_required - Boolean of whether this input is requred for the form to validate
+
+Example:
+
+  {% import 'macros/form.html' as form %}
+  {{ form.checkbox('remember', checked=true) }}
+
+#}
+{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false) %}
+  {%- set extra_html = caller() if caller -%}
+  <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
+    <div class="controls">
+      <label class="checkbox" for="{{ id or name }}">
+        <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
+        {{ label or name }}
+        {#% if is_required %}{{ input_required() }}{% endif %#}
+        {% if error and error is iterable %}<strong class="error-inline">{{ error|join(', ') }}</strong>{% endif %}
+      </label>
+      {{ extra_html }}
+    </div>
+  </div>
+{% endmacro %}
