@@ -2,21 +2,21 @@
 
 <section id="dataset-contact" class="dataset-contact">
     <h3>{{ _('Contact Maintainer') }}</h3>
-    <form class="form" action="/dataset/{{ pkg_name }}/contact" method="POST">
+    <form class="form form-horizontal" action="/dataset/{{ pkg_name }}/contact" method="POST">
         <div class="form-controls">
             {% if not data %}
                 {% set name = userobj.fullname if userobj.fullname else userobj.name %}
             {% else %}
                 {% set name = data.name %}
             {% endif %}
-            {{ form.input('name', label=_('Your Name'), id='field-name', value=name, error=errors.name, classes=['control-medium'], is_required=true) }}
+            {{ form.input('name', label=_('Your Name'), id='field-name', value=name, error=errors.name, classes=['control-medium'], is_required=true, attrs={'class': 'form-control'}) }}
 
             {% set email = data.email|lower if data else userobj.email|lower %}
-            {{ form.input('email', label=_('Your Email'), id='field-email', value=email, error=errors.email, classes=['control-medium'], is_required=true) }}
+            {{ form.input('email', label=_('Your Email'), id='field-email', value=email, error=errors.email, classes=['control-medium'], is_required=true, attrs={'class': 'form-control'}) }}
 
-            {{ form.input('subject', label=_('Subject'), id='field-subject', value=data.subject, error=errors.subject, classes=['control-medium'], is_required=true) }}
+            {{ form.input('subject', label=_('Subject'), id='field-subject', value=data.subject, error=errors.subject, classes=['control-medium'], is_required=true, attrs={'class': 'form-control'}) }}
 
-            {{ form.textarea('message', label=_('Your Message'), id='field-message', value=data.message, error=errors.message, classes=['control-full'], is_required=true) }}
+            {{ form.textarea('message', label=_('Your Message'), id='field-message', value=data.message, error=errors.message, classes=['control-full'], is_required=true, attrs={'class': 'form-control'}) }}
         </div>
         <div class="privacy-statement">
             <p>The Department of Premier and Cabinet collects the information that you provide with this enquiry form. We use the information you provide to respond to your enquiry. You can request access to, and corrections of, any personal information provided in this form. Requests for access or correction should be sent to <a href="mailto:contact@dpc.vic.gov.au?subject=Contact%20data.vic%20regarding%20privacy%20and%20personal%20information%20submitted%20in%20the%20enquiry%20form" target="" data-print-url="mailto:contact@dpc.vic.gov.au?subject=Contact%20data.vic%20regarding%20privacy%20and%20personal%20information%20submitted%20in%20the%20enquiry%20form" class="rpl-link rpl-text-link"><span class="rpl-link__inner"><span class="rpl-text-label"><span>contact@dpc.vic.gov.au</span></span></span></a>.</p>
