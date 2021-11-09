@@ -16,8 +16,8 @@ smtp.password = <SMTP_PASSWORD>
 #### Install the extension 
 Refer to [Extending guide](http://docs.ckan.org/en/latest/extensions/tutorial.html#installing-the-extension).
 ```
-. /usr/lib/ckan/default/bin/activate
-cd /usr/lib/ckan/default/src/ckanext-datasetform
+. /app/ckan/default/bin/activate
+cd /app/ckan/default/src/ckanext-datasetform
 python setup.py develop
 ```
 
