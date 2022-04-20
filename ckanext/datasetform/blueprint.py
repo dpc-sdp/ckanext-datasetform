@@ -91,7 +91,6 @@ def send(dataset_id):
             }
 
             try:
-                import ipdb; ipdb.set_trace()
                 mailer.mail_recipient(**mail_dict)
             except (mailer.MailerException, socket.error):
                 log.error(u'Cannot send contact email for dataset %s.', pkg.name, exc_info=1)
