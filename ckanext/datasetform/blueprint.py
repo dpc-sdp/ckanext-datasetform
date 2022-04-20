@@ -87,11 +87,11 @@ def send(dataset_id):
                 'recipient_email': recipient_email,
                 'recipient_name': recipient_email,
                 'subject': data_dict['subject'],
-                'body': body,
-                'headers': {'reply-to': data_dict['email']}
+                'body': body
             }
 
             try:
+                import ipdb; ipdb.set_trace()
                 mailer.mail_recipient(**mail_dict)
             except (mailer.MailerException, socket.error):
                 log.error(u'Cannot send contact email for dataset %s.', pkg.name, exc_info=1)
