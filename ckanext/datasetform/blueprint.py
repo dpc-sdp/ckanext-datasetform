@@ -38,7 +38,7 @@ def send(dataset_id):
     recipient_email = pkg_dict.get(recipient_email_key)
 
     if not recipient_email:
-         recipient_email = config.get('email_to')
+         recipient_email = config.get('ckan.package.default_recipient_email') or config.get('email_to')
 
     if request.method == 'POST':
         data_dict = clean_dict(unflatten(tuplize_dict(parse_params(request.form))))
