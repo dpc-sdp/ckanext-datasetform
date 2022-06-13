@@ -2,149 +2,50 @@ import pytest
 
 import ckan.tests.factories as factories
 from ckan.logic import ValidationError
+from ckan.tests.helpers import call_action
 
 import ckanext.datasetform.logic.action.create as create
 
 
-@pytest.mark.usefixtures("clean_db", "mail_server")
-class TestContactSend:
-    data_dict = {
+@pytest.fixture
+def data_dict():
+    dataset = factories.Dataset()
+    return {
         "name": "test",
         "email": "info@test.ckan.net",
         "recipient_email": "test@test2.com",
         "subject": "Test email",
         "message": "Test email message",
         "terms": True,
+        "id": dataset["id"],
+        "pkg_name": dataset["name"],
+        "pkg_url": "/dataset/%s" % dataset["name"],
     }
 
-    def pkg_add_keys(self, data_dict, dataset):
-        data_dict["id"] = dataset["id"]
-        data_dict["pkg_name"] = dataset["name"]
-        data_dict["pkg_url"] = "/dataset/%s" % dataset["name"]
-        return data_dict
 
-    def test_check_email_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
+@pytest.mark.ckan_config("ckan.plugins", "datasetform")
+@pytest.mark.usefixtures("clean_db", "mail_server")
+class TestContactSend:
+    def test_check_email_validation(self, data_dict):
         data_dict["email"] = "testincorrectemail"
 
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-
         with pytest.raises(ValidationError, match="Incorrect email address."):
-            create.send_contant_form(context, data_dict)
+            call_action("send_contant_form", **data_dict)
 
-    def test_check_terms_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
 
-        data_dict = self.data_dict.copy()
+    @pytest.mark.parametrize("field", ["terms", "subject", "message", "name", "recipient_email", "id", "pkg_name"])
+    def test_check_fields_validation(self, field, data_dict):
+        data_dict.pop(field)
 
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("terms")
+        with pytest.raises(ValidationError, match=create.errors_text[field]):
+            call_action("send_contant_form", **data_dict)
 
-        with pytest.raises(ValidationError, match=create.errors_text["terms"]):
-            create.send_contant_form(context, data_dict)
 
-    def test_check_subject_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("subject")
-
-        with pytest.raises(ValidationError, match=create.errors_text["subject"]):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_message_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("message")
-
-        with pytest.raises(ValidationError, match=create.errors_text["message"]):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_name_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("name")
-
-        with pytest.raises(ValidationError, match=create.errors_text["name"]):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_recipient_email_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("recipient_email")
-
-        with pytest.raises(
-            ValidationError, match=create.errors_text["recipient_email"]
-        ):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_id_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("id")
-
-        with pytest.raises(
-            ValidationError, match="Missing id, can not get Package object"
-        ):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_pkg_name_validation(self):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-        data_dict.pop("pkg_name")
-
-        with pytest.raises(ValidationError, match=create.errors_text["pkg_name"]):
-            create.send_contant_form(context, data_dict)
-
-    def test_check_email_send_validation(self, mail_server):
-        dataset = factories.Dataset()
-        user = factories.User()
-        context = {"user": user["name"]}
-
-        data_dict = self.data_dict.copy()
-
-        data_dict = self.pkg_add_keys(data_dict, dataset)
-
-        send = create.send_contant_form(context, data_dict)
-
+    def test_check_email_send_validation(self, mail_server, data_dict):
+        send = call_action("send_contant_form", **data_dict)
         msgs = mail_server.get_smtp_messages()
 
         # Compare with sended recipient email
-        assert self.data_dict["recipient_email"] == msgs[0][2][0]
+        assert data_dict["recipient_email"] == msgs[0][2][0]
 
         assert send["success"] == True
