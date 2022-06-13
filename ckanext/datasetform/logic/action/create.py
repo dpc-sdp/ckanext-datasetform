@@ -3,9 +3,7 @@ import logging
 import re
 import socket
 
-from ckan.logic import ValidationError
-
-from ckan.plugins.toolkit import check_access
+from ckan.plugins.toolkit import check_access, ValidationError
 
 log = logging.getLogger(__name__)
 
