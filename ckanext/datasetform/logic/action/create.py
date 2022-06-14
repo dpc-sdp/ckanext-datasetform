@@ -27,7 +27,6 @@ def send_contant_form(context, data_dict):
     errors = {}
 
     for error_text_key in errors_text:
-        # print(error_text_key)
         if error_text_key not in data_dict or data_dict[error_text_key] == "":
             errors[error_text_key] = errors_text[error_text_key]
         elif error_text_key == "email":
