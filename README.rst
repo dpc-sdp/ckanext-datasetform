@@ -33,8 +33,7 @@ To install ckanext-datasetform:
      ckan.plugins = stats text_view image_view recline_view datasetform
 
 3. Enable Email settings.
-
-     email_to = datavic@salsadigital.com.au
+     email_to = ckan_email@example.com
      #error_email_from = ckan-errors@example.com
      smtp.server = <SMTP_SERVER>
      smtp.starttls = True
@@ -54,7 +53,7 @@ Config Settings
     ckan.package.contact_recipient = maintainer_email
 
 
-If `ckan.package.contact_recipient` is not set, the form will fall back to using the CKAN setting `email_to`.
+If `ckan.package.contact_recipient` is not set, the form will fall back to using the CKAN setting `ckan.package.default_recipient_email` and then `email_to`.
 
 ------------------------
 Development Installation

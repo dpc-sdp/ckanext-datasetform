@@ -4,7 +4,7 @@ This CKAN extension adds a simple form to each dataset that sends an email to th
 
 #### Enable Email settings
 ```
-email_to = datavic@salsadigital.com.au
+email_to = ckan_email@example.com
 #error_email_from = ckan-errors@example.com
 smtp.server = <SMTP_SERVER>
 smtp.starttls = True
@@ -32,5 +32,6 @@ ckan.plugins = stats text_view image_view recline_view datasetform
 ## Dataset Contact form settings
 # Recipient email for each package. Use the field name from dataset, eg. maintainer_email or author_email.
 ckan.package.contact_recipient = maintainer_email
+ckan.package.default_recipient_email = example@email.com
 ```
-If `ckan.package.contact_recipient` is not set, the form will fall back to using the CKAN setting `email_to`.
+If `ckan.package.contact_recipient` is not set, the form will fall back to using the CKAN setting `ckan.package.default_recipient_email` and then `email_to`.

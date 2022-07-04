@@ -1,7 +1,4 @@
-import ckan.lib.mailer as mailer
 import logging
-import re
-import socket
 
 from ckan import model
 from ckan.common import c, _, config
