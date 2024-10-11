@@ -9,10 +9,10 @@ log = logging.getLogger(__name__)
 
 
 errors_text = {
-    "name": "Missing value for Your Name.",
-    "email": "Missing value for Your Email.",
+    "name": "Missing value for Name.",
+    "email": "Missing value for Email.",
     "subject": "Missing value for Subject",
-    "message": "Missing value for your Message.",
+    "message": "Missing value for Message.",
     "terms": "Please accept the privacy statement.",
     "recipient_email": "Missing Recipient email",
     "id": "Missing Dataset ID",
