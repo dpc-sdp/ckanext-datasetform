@@ -6,9 +6,9 @@
     {{ form.errors(errors) }}
     {{ super() }}
 
-    {% snippet "package/snippets/data_publisher_notice.html", pkg_dict=pkg %}
-
-    {% set data = data if data else None %}
-    {% set errors = errors if errors else None %}
-    {% snippet "package/contact.html", pkg_id=pkg.id, pkg_name=pkg.name, userobj=c.userobj, data=data, errors=errors %}
+    {% block contact_info %}
+        {% set data = data if data else None %}
+        {% set errors = errors if errors else None %}
+        {% snippet "package/contact.html", pkg_id=pkg.id, pkg_name=pkg.name, userobj=c.userobj, data=data, errors=errors %}
+    {% endblock %}
 {% endblock %}
