@@ -30,7 +30,7 @@ class TestContactSend:
         data_dict["email"] = "testincorrectemail"
 
         with pytest.raises(ValidationError, match="Incorrect email address."):
-            call_action("send_contant_form", **data_dict)
+            call_action("send_contact_form", **data_dict)
 
 
     @pytest.mark.parametrize("field", ["terms", "subject", "message", "name", "recipient_email", "id", "pkg_name"])
@@ -38,11 +38,11 @@ class TestContactSend:
         data_dict.pop(field)
 
         with pytest.raises(ValidationError, match=create.errors_text[field]):
-            call_action("send_contant_form", **data_dict)
+            call_action("send_contact_form", **data_dict)
 
 
     def test_check_email_send_validation(self, mail_server, data_dict):
-        send = call_action("send_contant_form", **data_dict)
+        send = call_action("send_contact_form", **data_dict)
         msgs = mail_server.get_smtp_messages()
 
         # Compare with sended recipient email

@@ -58,7 +58,7 @@ def send(dataset_id):
             data_dict["pkg_name"] = pkg_dict['name']
             data_dict["recipient_email"] = recipient_email
 
-            send_contact = get_action("send_contant_form")(context, data_dict)
+            send_contact = get_action("send_contact_form")(context, data_dict)
         except ValidationError as e:
             errors = e.error_dict
             h.flash_error("Please correct all errors in the contact form.")
