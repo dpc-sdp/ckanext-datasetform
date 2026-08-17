@@ -1,0 +1,7 @@
+Name: {{ name }}
+Email: {{ email }}
+
+Dataset: {{ pkg_url }}
+Dataset ID: {{ pkg_id }}
+
+{{ message }}
