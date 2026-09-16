@@ -47,6 +47,7 @@ def send_contact_form(context, data_dict):
     recipient_email = data_dict.pop("recipient_email")
     pkg_id = data_dict.pop("id")
     pkg_name = data_dict.pop("pkg_name")
+    pkg_title = data_dict.pop("pkg_title", None) or pkg_name
 
     extra_vars = {
         "name": data_dict["name"],
@@ -54,6 +55,7 @@ def send_contact_form(context, data_dict):
         "pkg_url": data_dict["pkg_url"],
         "pkg_id": pkg_id,
         "pkg_name": pkg_name,
+        "pkg_title": pkg_title,
         "message": data_dict["message"],
         "site_title": config.get('ckan.site_title')
     }
