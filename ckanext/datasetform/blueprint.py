@@ -56,6 +56,7 @@ def send(dataset_id):
         try:
             data_dict["id"] = pkg_dict['id']
             data_dict["pkg_name"] = pkg_dict['name']
+            data_dict["pkg_title"] = pkg_dict.get('title') or pkg_dict['name']
             data_dict["recipient_email"] = recipient_email
 
             send_contact = get_action("send_contact_form")(context, data_dict)
