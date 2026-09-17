@@ -47,7 +47,7 @@ def send(dataset_id):
         ) or config.get("email_to")
 
     data_dict = clean_dict(unflatten(tuplize_dict(parse_params(request.form))))
-    data_dict["pkg_url"] = "/dataset/%s" % pkg_dict['name']
+    data_dict["pkg_url"] = h.url_for("dataset.read", id=pkg_dict['name'], qualified=True)
 
     if not recipient_email:
         log.error("Recipient address for dataset %s is empty.", pkg_dict['name'])
