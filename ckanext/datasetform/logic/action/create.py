@@ -1,8 +1,10 @@
-import ckan.lib.mailer as mailer
 import logging
 import re
 import socket
 
+import ckan.lib.mailer as mailer
+from ckan.common import config
+from ckan.plugins import toolkit
 from ckan.plugins.toolkit import check_access, ValidationError
 
 log = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ errors_text = {
 }
 
 
-def send_contant_form(context, data_dict):
+def send_contact_form(context, data_dict):
     success = False
     check_access("package_show", context, data_dict)
 
@@ -45,18 +47,25 @@ def send_contant_form(context, data_dict):
     recipient_email = data_dict.pop("recipient_email")
     pkg_id = data_dict.pop("id")
     pkg_name = data_dict.pop("pkg_name")
+    pkg_title = data_dict.pop("pkg_title", None) or pkg_name
 
-    # Attempt to send mail.
-    body = "Name: %s\nEmail: %s" % (data_dict["name"], data_dict["email"])
-    body += "\n\nDataset: %s" % data_dict["pkg_url"]
-    body += "\nDataset ID: %s" % pkg_id
-    body += "\n\n%s" % data_dict["message"]
+    extra_vars = {
+        "name": data_dict["name"],
+        "email": data_dict["email"],
+        "pkg_url": data_dict["pkg_url"],
+        "pkg_id": pkg_id,
+        "pkg_name": pkg_name,
+        "pkg_title": pkg_title,
+        "message": data_dict["message"],
+        "site_title": config.get('ckan.site_title')
+    }
 
     mail_dict = {
         "recipient_email": recipient_email,
         "recipient_name": recipient_email,
         "subject": data_dict["subject"],
-        "body": body,
+        "body": toolkit.render("emails/contact_form.txt", extra_vars),
+        "body_html": toolkit.render("emails/contact_form.html", extra_vars),
     }
 
     try:

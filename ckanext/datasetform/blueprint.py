@@ -47,7 +47,7 @@ def send(dataset_id):
         ) or config.get("email_to")
 
     data_dict = clean_dict(unflatten(tuplize_dict(parse_params(request.form))))
-    data_dict["pkg_url"] = "/dataset/%s" % pkg_dict['name']
+    data_dict["pkg_url"] = h.url_for("dataset.read", id=pkg_dict['name'], qualified=True)
 
     if not recipient_email:
         log.error("Recipient address for dataset %s is empty.", pkg_dict['name'])
@@ -56,9 +56,10 @@ def send(dataset_id):
         try:
             data_dict["id"] = pkg_dict['id']
             data_dict["pkg_name"] = pkg_dict['name']
+            data_dict["pkg_title"] = pkg_dict.get('title') or pkg_dict['name']
             data_dict["recipient_email"] = recipient_email
 
-            send_contact = get_action("send_contant_form")(context, data_dict)
+            send_contact = get_action("send_contact_form")(context, data_dict)
         except ValidationError as e:
             errors = e.error_dict
             h.flash_error("Please correct all errors in the contact form.")
